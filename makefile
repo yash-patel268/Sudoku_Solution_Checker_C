@@ -2,9 +2,9 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 
 LFLAGS = 
 LIBS = -lm -pthread
-SOURCES = sodoku.c
+SOURCES = sudoku.c
 OBJECTS = $(subst .c,.o,$(SOURCES))
-EXE = sodoku
+EXE = sudoku
 .PHONY: clean help
 
 sodoku : sodoku.c
