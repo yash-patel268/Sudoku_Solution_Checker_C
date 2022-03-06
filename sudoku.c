@@ -34,7 +34,7 @@ void * walkRows(void * params){
         for (int y = startCol; y < N; ++y){
             int val = data->sudoku[x][y];
 
-            if (row[val] != 0) {
+            if (row[val] != 0){
                 return (void *) 0;
             } else{
                 row[val] = 1;
@@ -45,7 +45,7 @@ void * walkRows(void * params){
     return (void *) 1;
 }
 
-void * walkColumn(void * params){
+void * walkColumns(void * params){
     parameters * data = (parameters *) params;
 
     int startRow = data->row;
@@ -59,9 +59,29 @@ void * walkColumn(void * params){
 
             if (col[val] != 0) {
                 return (void *) 0;
-            }
-            else{
+            } else{
                 col[val] = 1;
+            }
+        }
+    }
+    return (void *) 1;
+}
+
+void * checkSquare(void * params) {
+    parameters * data = (parameters *) params;
+
+    int startRow = data->row;
+    int startCol = data->column;
+    int saved[10] = {0};
+
+    for (int x = startRow; x < startRow + 3; ++x) {
+        for (int y = startCol; y < startCol + 3; ++y) {
+            int val = data->sudoku[x][y];
+
+            if (saved[val] != 0) {
+                return (void *) 0;
+            } else{
+                saved[val] = 1;
             }
         }
     }
