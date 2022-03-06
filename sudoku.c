@@ -10,7 +10,8 @@ int isCorrect[3] = {0, 0, 0};
 
 typedef struct {
 	int column,row;
-} box_coordinates;
+    int (* sudoku)[9][9];
+} parameters;
 
 void readPuzzle(FILE *file) {
 	for (int x = 0; x < N; x++) {
@@ -21,3 +22,25 @@ void readPuzzle(FILE *file) {
 
 }
 
+void * walkRows(void * params) {
+    parameters * data = (parameters *) params;
+
+    int startRow = data->row;
+    int startCol = data->column;
+
+    for (int i = startRow; i < N; ++i) {
+        int row[10] = {0};
+
+        for (int j = startCol; j < N; ++j) {
+            int val = data->sudoku[i][j];
+
+            if (row[val] != 0) {
+                return (void *) 0;
+            } else{
+                row[val] = 1;
+            }
+        }
+    }
+    
+    return (void *) 1;
+}
