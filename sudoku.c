@@ -13,26 +13,26 @@ typedef struct {
     int (* sudoku)[9][9];
 } parameters;
 
-void readPuzzle(FILE *file) {
-	for (int x = 0; x < N; x++) {
-		for (int y = 0; y < N; y++) {
+void readPuzzle(FILE *file){
+	for (int x = 0; x < N; x++){
+		for (int y = 0; y < N; y++){
 			fscanf(file, "%d", &sudoku[x][y]);
 		}
 	}
 
 }
 
-void * walkRows(void * params) {
+void * walkRows(void * params){
     parameters * data = (parameters *) params;
 
     int startRow = data->row;
     int startCol = data->column;
 
-    for (int i = startRow; i < N; ++i) {
+    for (int x = startRow; x < N; ++x){
         int row[10] = {0};
 
-        for (int j = startCol; j < N; ++j) {
-            int val = data->sudoku[i][j];
+        for (int y = startCol; y < N; ++y){
+            int val = data->sudoku[x][y];
 
             if (row[val] != 0) {
                 return (void *) 0;
@@ -41,6 +41,29 @@ void * walkRows(void * params) {
             }
         }
     }
-    
+
+    return (void *) 1;
+}
+
+void * walkColumn(void * params){
+    parameters * data = (parameters *) params;
+
+    int startRow = data->row;
+    int startCol = data->column;
+
+    for (int x = startCol; x < N; ++x){
+        int col[10] = {0};
+
+        for (int y = startRow; y < N; ++y){
+            int val = data->sudoku[y][x];
+
+            if (col[val] != 0) {
+                return (void *) 0;
+            }
+            else{
+                col[val] = 1;
+            }
+        }
+    }
     return (void *) 1;
 }
