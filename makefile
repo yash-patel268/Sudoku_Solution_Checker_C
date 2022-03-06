@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 
 LFLAGS = 
-LIBS = -lm -lpthread
+LIBS = -lm -pthread
 SOURCES = sodoku.c
 OBJECTS = $(subst .c,.o,$(SOURCES))
 EXE = sodoku
