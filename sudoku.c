@@ -5,12 +5,11 @@
 
 #define N 9
 
-int sudoku[N][N];
-int isCorrect[3] = {0, 0, 0};
+int sudoku[N][N]={};
 
 typedef struct {
 	int column,row;
-    int (* sudoku)[9][9];
+    int (* sudoku)[9];
 } parameters;
 
 void readPuzzle(FILE *file){
@@ -94,110 +93,141 @@ int main(){
     FILE *solution = fopen("solution.txt", "w");
     
 
-    parameters * initial = (parameters *) malloc(sizeof(parameters));
-    initial->row = 0;
-    initial->column = 0;
-    initial->sudoku = sudoku;
+    parameters * param0 = (parameters *) malloc(sizeof(parameters));
+    param0->row = 0;
+    param0->column = 0;
+    param0->sudoku = sudoku;
     
     // ====== Create the parameters for the 3x3 threads ======
     
-    parameters * param[9];
     // First 3x3
-    param[0] = (parameters *) malloc(sizeof(parameters));
-    param[0]->row = 0;
-    param[0]->column = 0;
-    param[0]->sudoku = sudoku;
+    parameters * param1 = (parameters *) malloc(sizeof(parameters));
+    param1->row = 0;
+    param1->column = 0;
+    param1->sudoku = sudoku;
     
     // Second 3x3
-    param[1] = (parameters *) malloc(sizeof(parameters));
-    param[1]->row = 0;
-    param[1]->column = 3;
-    param[1]->sudoku = sudoku;
+    parameters * param2 = (parameters *) malloc(sizeof(parameters));
+    param2->row = 0;
+    param2->column = 3;
+    param2->sudoku = sudoku;
     
     // Third 3x3
-    param[2] = (parameters *) malloc(sizeof(parameters));
-    param[2]->row = 0;
-    param[2]->column = 6;
-    param[2]->sudoku = sudoku;
+    parameters * param3 = (parameters *) malloc(sizeof(parameters));
+    param3->row = 0;
+    param3->column = 6;
+    param3->sudoku = sudoku;
     
     // Fourth 3x3
-    param[3] = (parameters *) malloc(sizeof(parameters));
-    param[3]->row = 3;
-    param[3]->column = 0;
-    param[3]->sudoku = sudoku;
+    parameters * param4 = (parameters *) malloc(sizeof(parameters));
+    param4->row = 3;
+    param4->column = 0;
+    param4->sudoku = sudoku;
     
     // Fifth 3x3
-    param[4] = (parameters *) malloc(sizeof(parameters));
-    param[4]->row = 3;
-    param[4]->column = 3;
-    param[4]->sudoku = sudoku;
+    parameters * param5 = (parameters *) malloc(sizeof(parameters));
+    param5->row = 3;
+    param5->column = 3;
+    param5->sudoku = sudoku;
     
     // Sixth 3x3
-    param[5] = (parameters *) malloc(sizeof(parameters));
-    param[5]->row = 3;
-    param[5]->column = 6;
-    param[5]->sudoku = sudoku;
+    parameters * param6 = (parameters *) malloc(sizeof(parameters));
+    param6->row = 3;
+    param6->column = 6;
+    param6->sudoku = sudoku;
     
     // Seventh 3x3
-    param[6] = (parameters *) malloc(sizeof(parameters));
-    param[6]->row = 6;
-    param[6]->column = 0;
-    param[6]->sudoku = sudoku;
+    parameters * param7 = (parameters *) malloc(sizeof(parameters));
+    param7->row = 6;
+    param7->column = 0;
+    param7->sudoku = sudoku;
     
     // Eighth 3x3
-    param[7] = (parameters *) malloc(sizeof(parameters));
-    param[7]->row = 6;
-    param[7]->column = 3;
-    param[7]->sudoku = sudoku;
+    parameters * param8 = (parameters *) malloc(sizeof(parameters));
+    param8->row = 6;
+    param8->column = 3;
+    param8->sudoku = sudoku;
     
     // Ninth 3x3
-    param[8] = (parameters *) malloc(sizeof(parameters));
-    param[8]->row = 6;
-    param[8]->column = 6;
-    param[8]->sudoku = sudoku;
+    parameters * param9 = (parameters *) malloc(sizeof(parameters));
+    param9->row = 6;
+    param9->column = 6;
+    param9->sudoku = sudoku;
+    
+    // ====== Create the threads ======
+    pthread_t thread_rows, thread_cols, thread1, thread2, thread3, thread4, thread5, thread6, thread7, thread8, thread9;
+    
+    // ====== Create the return values for the threads ======
+    void * all_rows;
+    void * all_cols;
+    void * square1;
+    void * square2;
+    void * square3;
+    void * square4;
+    void * square5;
+    void * square6;
+    void * square7;
+    void * square8;
+    void * square9;
+    
+    // ====== Initialize the threads ======
+    pthread_create(&thread_rows, NULL, walkRows, (void *) param0);
+    pthread_create(&thread_cols, NULL, walkColumns, (void *) param0);
+    pthread_create(&thread1, NULL, checkSquare, (void *) param1);
+    pthread_create(&thread2, NULL, checkSquare, (void *) param2);
+    pthread_create(&thread3, NULL, checkSquare, (void *) param3);
+    pthread_create(&thread4, NULL, checkSquare, (void *) param4);
+    pthread_create(&thread5, NULL, checkSquare, (void *) param5);
+    pthread_create(&thread6, NULL, checkSquare, (void *) param6);
+    pthread_create(&thread7, NULL, checkSquare, (void *) param7);
+    pthread_create(&thread8, NULL, checkSquare, (void *) param8);
+    pthread_create(&thread9, NULL, checkSquare, (void *) param9);
 
-    pthread_t threads[9];
-    pthread_t threadRows, threadColumns;
-    void * allRows;
-    void * allColumns;
-    void * returnValues[9];
+    // ======= Wait for all threads to finish their tasks =======
+    pthread_join(thread_rows, &all_rows);
+    pthread_join(thread_cols, &all_cols);
+    pthread_join(thread1, &square1);
+    pthread_join(thread2, &square2);
+    pthread_join(thread3, &square3);
+    pthread_join(thread4, &square4);
+    pthread_join(thread5, &square5);
+    pthread_join(thread6, &square6);
+    pthread_join(thread7, &square7);
+    pthread_join(thread8, &square8);
+    pthread_join(thread9, &square9);
+    
 
+    for (int x = 0; x < N; x++){
+                for (int y = 0; y < N; y++) {
+                    fprintf(solution, "%d ", sudoku[x][y]);
+                    if (y == 8) {
+                        fprintf(solution, "\n");
+                    }
+                }
+        }
+    // ====== Check whether the Sudoku Puzzle was solved ======
+    if (    (int) all_rows == 1 &&
+            (int) all_cols == 1 &&
+            (int) square1 == 1 &&
+            (int) square2 == 1 &&
+            (int) square3 == 1 &&
+            (int) square4 == 1 &&
+            (int) square5 == 1 &&
+            (int) square6 == 1 &&
+            (int) square7 == 1 &&
+            (int) square8 == 1 &&
+            (int) square9 == 1 ) {
+                
+            printf("The Sudoku Puzzle is solved!\n");
 
-    pthread_create(&threadRows, NULL, walkRows, (void *) initial);
-    pthread_create(&threadColumns, NULL, walkColumns, (void *) initial);
-
-    for(int x=0; x<9; x++){
-        pthread_create(&threads[x], NULL, checkSquare, (void *) param[x]);
-    }
-
-    pthread_join(threadRows, &allRows);
-    pthread_join(threadColumns, &allColumns);
-
-    for(int x=0; x<9; x++){
-        pthread_join(threads[x], &returnValues[x]);
-    }
-
-    if (    (int) allRows == 1 &&
-            (int) allColumns == 1 &&
-            (int) returnValues[0] == 1 &&
-            (int) returnValues[1] == 1 &&
-            (int) returnValues[2] == 1 &&
-            (int) returnValues[3] == 1 &&
-            (int) returnValues[4] == 1 &&
-            (int) returnValues[5] == 1 &&
-            (int) returnValues[6] == 1 &&
-            (int) returnValues[7] == 1 &&
-            (int) returnValues[8] == 1 ) {
-        printf("The Sudoku Puzzle is solved!\n");
-
-        for (int x = 0; x < N; x++){
-            for (int y = 0; y < N; y++) {
-                fprintf(solution, "%d ", sudoku[x][y]);
-                if (y == 8) {
-                    fprintf(solution, "\n");
+            for (int x = 0; x < N; x++){
+                for (int y = 0; y < N; y++) {
+                    fprintf(solution, "%d ", sudoku[x][y]);
+                    if (y == 8) {
+                        fprintf(solution, "\n");
+                    }
                 }
             }
-	    }
     }
     else {
         printf("The Sudoku Puzzle is NOT solved.\n");

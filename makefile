@@ -7,7 +7,7 @@ OBJECTS = $(subst .c,.o,$(SOURCES))
 EXE = sudoku
 .PHONY: clean help
 
-sodoku : sodoku.c
+sudoku : sudoku.c
 	$(CC) $(CFLAGS) $^ $(LIBS) -o $@ 
 
 %.o : %.c
